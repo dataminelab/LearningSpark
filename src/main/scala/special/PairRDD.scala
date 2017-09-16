@@ -46,7 +46,9 @@ object PairRDD {
     val pairsRDD = sc.parallelize(pairs, 4)
     // let's say we just want the pair with minimum value for each key
     // we can use one of the handy methods in PairRDDFunctions
-    val reducedRDD = pairsRDD.reduceByKey(Math.min(_,_))
+    // https://stackoverflow.com/a/30147462/328989
+    //val reducedRDD = pairsRDD.reduceByKey(Math.min(_,_))
+    val reducedRDD = pairsRDD.reduceByKey(_+_)
 
     // look at the partitioning of the two RDDs: it involved communication
     analyze(pairsRDD)
@@ -78,12 +80,9 @@ object PairRDD {
     // results can be combined -- essentially this relaxes
     // the strict condition imposed on "reduceByKey" that the supplied
     // function must be associative
+    // See: https://stackoverflow.com/a/35651404/328989
+    // inside partition: Math.min(_,_), between partitions: Math.min(_,_)
     val reducedRDD2 = pairsRDD.aggregateByKey(Int.MaxValue)(Math.min(_,_), Math.min(_,_))
     analyze(reducedRDD2)
-
-    // TODO: come up with an interesting example of aggregateByKey that
-    // TODO: actually takes advantage of its generality
-
-    // TODO: go to town with PairRDD and PairRDDFunctions
   }
 }

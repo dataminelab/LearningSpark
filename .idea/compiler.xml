@@ -12,7 +12,9 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel target="1.8">
+      <module name="learningspark" target="1.8" />
       <module name="learningspark2" target="1.8" />
+      <module name="spark-examples" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

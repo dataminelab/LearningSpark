@@ -28,7 +28,7 @@ object Range {
     println(df2.rdd.partitions.size)
 
     println("\n*** stepped range with specified partitioning")
-    val df3 = spark.range(10, 14, 2, 2)
+    val df3 = spark.range(10, 20, 2, 2)
     df3.show()
     println("# Partitions = " + df3.rdd.partitions.length)
 

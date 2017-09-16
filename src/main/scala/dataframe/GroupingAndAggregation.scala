@@ -43,7 +43,7 @@ object GroupingAndAggregation {
     println("*** basic form of aggregation")
     customerDF.groupBy("state").agg("discount" -> "max").show()
 
-    // you can turn of grouping columns using the SQL context's
+    // you can turn off grouping columns using the SQL context's
     // configuration properties
 
     println("*** this time without grouping columns")
@@ -61,6 +61,8 @@ object GroupingAndAggregation {
     println("*** Column based aggregation")
     // you can use the Column object to specify aggregation
     customerDF.groupBy("state").agg(max($"discount")).show()
+    // Or you can add back the
+    // spark.conf.set("spark.sql.retainGroupColumns", "true")
 
     println("*** Column based aggregation plus grouping columns")
     // but this approach will skip the grouped columns if you don't name them

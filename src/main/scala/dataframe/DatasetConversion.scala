@@ -38,6 +38,10 @@ object DatasetConversion {
 
     customerDF.printSchema()
 
+    // DataFrame as an alias for a collection of generic objects Dataset[Row],
+    // where a Row is a generic untyped JVM object
+    println("*** Type: " + customerDF.getClass())
+
     println("*** DataFrame contents")
 
     customerDF.show()
@@ -60,6 +64,9 @@ object DatasetConversion {
     println("*** Dataset schema")
 
     customerDS.printSchema()
+
+    // Dataset is a collection of strongly-typed JVM objects
+    println("*** Type: " + customerDS.getClass())
 
     println("*** Dataset contents")
 

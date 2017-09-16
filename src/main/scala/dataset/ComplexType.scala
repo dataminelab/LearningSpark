@@ -50,7 +50,7 @@ object ComplexType {
     // using getField() --
     // so the column from.x is specified using $"from".getField("x")
     println("*** filter by one column and fetch another")
-    segmentsDS.where($"from".getField("x") > 7.0).select($"to").show()
+    segmentsDS.where($"from".getField("x") > 7.0).select($"from", $"to").show()
 
     //
     // Example 2: arrays
@@ -71,7 +71,7 @@ object ComplexType {
     // doesn't even exist in one of the rows
     println("*** filter by an array element")
     linesDS
-      .where($"points".getItem(2).getField("y") > 7.0)
+      .where($"points".getItem(1).getField("y") > 2.0)
       .select($"name", size($"points").as("count")).show()
 
     //
@@ -81,6 +81,7 @@ object ComplexType {
     println("*** Example 3: maps")
 
     val namedPoints = Seq(
+      // ArrowAssoc: https://stackoverflow.com/a/4980734/328989
       NamedPoints("a", Map("p1" -> Point(0.0, 0.0))),
       NamedPoints("b", Map("p1" -> Point(0.0, 0.0),
         "p2" -> Point(2.0, 6.0), "p3" -> Point(10.0, 100.0)))

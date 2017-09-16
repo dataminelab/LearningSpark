@@ -4,6 +4,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkContext, SparkConf}
 
 import scala.collection.mutable
+import org.apache.spark.sql.functions.broadcast
 
 // This gives is access to the PairRDDFunctions
 import org.apache.spark.SparkContext._
@@ -47,6 +48,8 @@ object HashJoin {
       4
     )
 
+    // SELECT largeRDD.value, smallRDD.value
+    // FROM largeRDD JOIN smallRDD ON largeRDD.key = smallRDD.key
     // simply joining the two RDDs will be slow as it requires
     // lots of communication
     val joined = largeRDD.join(smallRDD)
@@ -62,7 +65,5 @@ object HashJoin {
     val joiner = new HashJoiner(smallRDD.collect())
     val hashJoined = joiner.joinOnLeft(largeRDD)
     hashJoined.collect().foreach(println)
-
-
   }
 }

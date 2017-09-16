@@ -10,6 +10,8 @@ object CaseClass {
   // define a case class for the elements of the Dataset
   // NOTE: this needs to be outside the scope of the method where the
   // Dataset is created
+  // Case classes are great for modelling immutable data
+  // See: https://docs.scala-lang.org/tour/case-classes.html
   case class Number(i: Int, english: String, french: String)
 
   def main(args: Array[String]) {
@@ -33,12 +35,9 @@ object CaseClass {
     // Since we used a case class we can query using the field names
     // as column names
     println("*** filter by one column and fetch another")
-    numberDS.where($"i" > 2).select($"english", $"french").show()
+    numberDS.where($"i" >= 2).select($"english", $"french").show()
 
     println("*** could have used SparkSession.createDataset() instead")
     val anotherDS = spark.createDataset(numbers)
-
-    println("*** case class Dataset types")
-    anotherDS.dtypes.foreach(println(_))
   }
 }

@@ -1,4 +1,4 @@
-name := "LearningSpark"
+name := "SparkExamples"
 
 version := "1.0"
 
@@ -20,6 +20,8 @@ libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.2.0"
 libraryDependencies += "org.apache.spark" %% "spark-hive" % "2.2.0"
 
 libraryDependencies += "org.apache.spark" %% "spark-graphx" % "2.2.0"
+
+libraryDependencies += "org.scalatest"   %% "scalatest"    % "2.2.1"   % "test"
 
 // needed to make the hiveql examples run at least on Linux
 javaOptions in run += "-XX:MaxPermSize=128M"

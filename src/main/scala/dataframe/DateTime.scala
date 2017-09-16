@@ -65,6 +65,7 @@ object DateTime {
                       trunc($"dt", "MM")).show()
 
     println("Date formatting")
+    // Supports java.text.SimpleDateFormat
     tdf.select($"dt", date_format($"dt", "MMM dd, YYYY")).show()
 
     println("Pull a Timestamp type apart when querying")

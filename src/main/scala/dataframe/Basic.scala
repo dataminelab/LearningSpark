@@ -9,6 +9,7 @@ import org.apache.spark.sql.SparkSession
 // FromRowsAndSchema.scala to see how to do that.
 //
 object Basic {
+
   case class Cust(id: Integer, name: String, sales: Double, discount: Double, state: String)
 
   def main(args: Array[String]) {

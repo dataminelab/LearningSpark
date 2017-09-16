@@ -14,10 +14,14 @@ object Basic {
         .master("local[4]")
         .getOrCreate()
 
+    // Encoders for most common types are automatically provided by importing spark.implicits._
     import spark.implicits._
 
     // Create a tiny Dataset of itnegers
     val s = Seq(10, 11, 12, 13, 14, 15)
+
+    // For implicit explanation see:
+    // https://stackoverflow.com/a/46252991/328989
     val ds = s.toDS()
 
     println("*** only one column, and it always has the same name")
@@ -30,6 +34,8 @@ object Basic {
     ds.printSchema()
 
     println("*** values > 12")
+    // $ Converts $"col name" into a [[Column]].
+    // Also see: https://spark.apache.org/docs/2.2.0/api/scala/index.html#org.apache.spark.sql.Column
     ds.where($"value" > 12).show()
 
     // This seems to be the best way to get a range that's actually a Seq and

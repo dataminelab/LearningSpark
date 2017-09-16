@@ -115,10 +115,6 @@ object ComplexSchema {
     println("Apply a membership test to each array in a column")
     df2.select($"id", array_contains($"a", 2).as("has2")).show()
 
-    // interestingly, indexing using the [] syntax seems not to be supported
-    // (surprising only because that syntax _does_ work in Spark SQL)
-    //df2.select("id", "a[2]").show()
-
     println("Use column function getItem() to index into array when selecting")
     df2.select($"id", $"a".getItem(2)).show()
 

@@ -80,6 +80,7 @@ object Ex6_Accumulators {
 
     // an efficient counter -- this is one of the basic accumulators that
     // Spark provides "out of the box"
+    // See: https://spark.apache.org/docs/latest/rdd-programming-guide.html#accumulators
     val count = sc.longAccumulator
 
     println("*** Using a simple counter")
