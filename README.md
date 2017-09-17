@@ -1,25 +1,30 @@
 
-# These examples are based on the _LearningSpark_ Project
+This projects is intended to be used together with:
+* https://hub.docker.com/r/dataminelab/dev-spark
+
+Following examples are based on the _LearningSpark_ Project:
 https://github.com/spirom/LearningSpark
 
-The main changes:
+The key changes:
 * Can be used together with the customised Docker image for docker-spark: https://github.com/dataminelab/docker-spark
-* Added examples for cluster deployment using `docker-compose`
+* Added cluster deployment using `docker-compose`
 * Added TDD example with `FunSpec`
-* Monitoring notes
+* Monitoring and UI notes
 * Added examples for `EMR` deployment
 
 # Docker
 
 To run locally with the Docker
 
-See instructions here on how to run local docker image and connect to it with `bash`:
+See instructions here on how to run local docker, both docker single and cluster:
 https://github.com/dataminelab/docker-spark
 
 ```
+# connect to docker
+
 # to run a specific example from within the docker
 cd /var/examples
-# this might take few minutes
+# this might take few minutes on the first run
 sbt package
 # submit a chosen class
 $SPARK_HOME/bin/spark-submit --class Ex1_SimpleRDD ./target/scala-2.11/sparkexamples_2.11-1.0.jar
@@ -71,10 +76,6 @@ Good options to provide:
 --supervise # If given, restarts the driver on failure.
             # Watch out on too many restarts!
 ```
-
-For a reference:
-${SPARK_CMD} --master ${SPARK_MASTER} --deploy-mode cluster --supervise --class ${MAIN_CLASS} ${APP_FILE} ${SPARK_WORKERS} ${KAFKA_TOPIC} 2>&1 | tee submitter.log
-
 
 ## Dependencies
 
