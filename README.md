@@ -10,7 +10,7 @@ The key changes:
 * Added cluster deployment using `docker-compose`
 * Added TDD example with `FunSpec`
 * Monitoring and UI notes
-* Added examples for `EMR` deployment
+* Added aws cli examples for `EMR` deployment
 
 # Docker
 
@@ -20,9 +20,7 @@ See instructions here on how to run local docker, both docker single and cluster
 https://github.com/dataminelab/docker-spark
 
 ```
-# connect to docker
-
-# to run a specific example from within the docker
+# to run a specific example (from within the docker)
 cd /var/examples
 # this might take few minutes on the first run
 sbt package
@@ -30,14 +28,14 @@ sbt package
 $SPARK_HOME/bin/spark-submit --class Ex1_SimpleRDD ./target/scala-2.11/sparkexamples_2.11-1.0.jar
 ```
 
-To run the example without Spark logs:
+To run the example without spurious Spark logs:
 ```
 spark-submit \
 --conf "spark.driver.extraJavaOptions=-Dlog4j.configuration=file:///var/examples/src/main/resources/log4j.properties" \
 --class Ex2_Computations ./target/scala-2.11/sparkexamples_2.11-1.0.jar
 ```
 
-To see historical logs start history server:
+To see historical logs start the history server:
 ```
 mkdir /tmp/spark-events
 $SPARK_HOME/sbin/start-history-server.sh
@@ -68,7 +66,7 @@ spark-submit \
 Note:
 * The config options can be moved to conf/master and conf/worker 
 
-Good options to provide:
+Options:
 ```
 --deploy-mode cluster # Whether to launch the driver program locally ("client") or
                               on one of the worker machines inside the cluster ("cluster")
@@ -76,6 +74,59 @@ Good options to provide:
 --supervise # If given, restarts the driver on failure.
             # Watch out on too many restarts!
 ```
+
+## EMR
+
+To submit example from within the Spark master on EMR (first ssh to the master node):
+```
+# First run one of the standard examples just to confirm things work fine
+spark-submit --driver-memory 512m --executor-memory 512m --class org.apache.spark.examples.SparkPi /usr/lib/spark/examples/jars/spark-examples.jar 10
+```
+
+To compile all examples and run them directly on the EMR cluster:
+```
+# ssh to the EMR master
+# Download and compile source code
+sudo yum install -y git
+git clone https://github.com/dataminelab/LearningSpark
+cd LearningSpark
+# install and compile sbt
+curl -s "https://get.sdkman.io" | bash
+source "/home/hadoop/.sdkman/bin/sdkman-init.sh"
+sdk install sbt
+# This could take few minutes
+sbt package
+```
+
+Alternative solutions:
+```
+# Upload the package to S3 using aws-cli
+# Start from congiguring aws key/secret key
+aws configure
+# Upload package to S3 (create S3 bucket and replace mybucket with your name)
+aws s3 cp /var/examples/target/scala-2.11/sparkexamples_2.11-1.0.jar s3://mybucket/
+# Deploy to YARN using S3 (replace j-xxxxx with your cluster id)
+aws emr add-steps --cluster-id j-xxxxx --steps Type=spark,Name=SparkWordCountApp,Args=[--deploy-mode,cluster,--master,yarn,--conf,spark.yarn.submit.waitAppCompletion=false,--num-executors,5,--executor-cores,5,--executor-memory,20g,s3://codelocation/wordcount.py,s3://inputbucket/input.txt,s3://outputbucket/],ActionOnFailure=CONTINUE
+```
+See for more details:
+* You might as well deploy it manually: http://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-launch-custom-jar-cli.html
+* Pass your custom file: s3://mybucket/sparkexamples_2.11-1.0.jar
+* Use following options: --class Ex1_SimpleRDD
+
+Do the same with the aws cli:
+```
+# TODO - add cluster step
+```
+
+* http://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-submit-step.html
+* https://aws.amazon.com/cli/
+
+## EMR logs
+
+* Install Chrome
+* Install FoxyProxy Basic: https://chrome.google.com/webstore/search/foxy%20proxy
+* Navigate to: chrome://extensions/ and click on FoxyProxy Options, choose Import/Export
+* Follow instructions from http://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-connect-master-node-proxy.html
 
 ## Dependencies
 
@@ -95,12 +146,9 @@ The examples can be found under src/main/scala. The best way to use them is to s
 |          rdd/Ex4_MoreOperationsOnRDDs | More complex operations on individual RDDs |
 |          rdd/Ex5_Partitions        | Explicit control of partitioning for performance and scalability. |
 |          rdd/Ex6_Accumulators | How to use Spark accumulators to efficiently gather the results of distributed computations. |
-| [hiveql](src/main/scala/hiveql)  | Using HiveQL features in a HiveContext. See the local README.md in that directory for details. |
-| [special](src/main/scala/special) | Special/adbanced RDD examples -- see the local README.md in that directory for details. |
 | [dataset](src/main/scala/dataset) | A range of Dataset examples (queryable collection that is statically typed) -- see the local README.md in that directory for details. |
 | [dataframe](src/main/scala/dataframe) | A range of DataFrame examples (queryable collection that is dynamically -- and weakly -- typed)-- see the local README.md in that directory for details. |
 | [sql](src/main/scala/sql) | A range of SQL examples -- see the local README.md in that directory for details.  |
 | [streaming](src/main/scala/streaming) | Streaming examples -- see the local README.md in that directory for details.  |
 | [streaming/structured](src/main/scala/streaming/structured) | Structured streaming examples (Spark 2.0) -- see the local README.md in that directory for details.  |
-| [graphx](src/main/scala/graphx) | A range of GraphX examples -- see the local README.md in that directory for details. |
 
