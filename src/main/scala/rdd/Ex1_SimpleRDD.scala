@@ -10,6 +10,7 @@ object Ex1_SimpleRDD {
     val numbersRDD = sc.parallelize(numbers, 4)
     println("Print each element of the original RDD")
     numbersRDD.foreach(println)
+    //numbersRDD.take(100).foreach(println)
 
     // trivially operate on the numbers
     val stillAnRDD = numbersRDD.map(n => n.toDouble / 10)
